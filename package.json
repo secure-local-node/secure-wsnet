@@ -1,0 +1,31 @@
+{
+  "name": "secure-localnet",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/secure-local-node/secure-localnet.git"
+  },
+  "keywords": [
+    "secure",
+    "server",
+    "websocket"
+  ],
+  "author": "Eric Jiang <ejiang9@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/secure-local-node/secure-localnet/issues"
+  },
+  "homepage": "https://github.com/secure-local-node/secure-localnet#readme",
+  "dependencies": {
+    "secret-handshake-over-hypercore": "^0.1.0",
+    "simple-websocket": "^7.2.0"
+  },
+  "devDependencies": {
+    "tape": "^4.10.1",
+  }
+}
