@@ -12,6 +12,7 @@ const server = net.createServer({
   ]
 })
 
+server.listen()
 server.setMaxListeners(0)
 
 server.on('connection', bob => {
