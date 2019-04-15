@@ -20,24 +20,43 @@ class Server extends EventEmitter {
       throw new TypeError('A sharedKey buffer is required.')
     }
 
-    this.sharedKey = opts.sharedKey
+    this.destroyed = false
 
+    this.sharedKey = opts.sharedKey
     this.commands = opts.commands || []
     this.capabilities = opts.capabilities || []
   }
 
   listen(port, cb) {
     this._server = new _Server({ port }, cb)
-    this._server.on('connection', this._onConnection.bind(this))
+    this.onConnection = this._onConnection.bind(this)
+    this.onListening = this._onListening.bind(this)
+    this._server.on('connection', this.onConnection)
+    this._server.on('listening', this.onListening)
     return this
   }
 
-  _onConnection (conn) {
+  _onConnection(conn) {
     const shhConnection = shh.connect(this.sharedKey, {
       connect: () => conn,
       capabilities: this.capabilities
     })
     this.emit('connection', shhConnection)
+  }
+
+  _onListening() {
+    this.emit('listening')
+  }
+
+  close(cb) {
+    console.log('close!')
+    if (this.destroyed) {
+      cb(new Error('Server is closed.'))
+    }
+    this.destroyed = true
+    this._server.removeListener('connection', this.onConnection)
+    this._server.removeListener('listening', this.onListening)
+    this._server.close(() => this.emit('close'))
   }
 }
 
