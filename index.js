@@ -1,5 +1,6 @@
 const shh = require('secret-handshake-over-hypercore')
 const _Server = require('simple-websocket/server')
+const WebSocket = require('simple-websocket')
 const { EventEmitter } = require('events')
 
 function createServer(opts, cb) {
@@ -23,12 +24,11 @@ class Server extends EventEmitter {
     this.destroyed = false
 
     this.sharedKey = opts.sharedKey
-    this.commands = opts.commands || []
     this.capabilities = opts.capabilities || []
   }
 
-  listen(port, cb) {
-    this._server = new _Server({ port }, cb)
+  listen(port, opts, cb) {
+    this._server = new _Server(Object.assign({ port }, opts))
     this.onConnection = this._onConnection.bind(this)
     this.onListening = this._onListening.bind(this)
     this._server.on('connection', this.onConnection)
@@ -37,11 +37,12 @@ class Server extends EventEmitter {
   }
 
   _onConnection(conn) {
-    const shhConnection = shh.connect(this.sharedKey, {
+    const socket = new Socket({
+      sharedKey: this.sharedKey,
       connect: () => conn,
       capabilities: this.capabilities
-    })
-    this.emit('connection', shhConnection)
+    }).connect()
+    this.emit('connection', socket)
   }
 
   _onListening() {
@@ -49,7 +50,6 @@ class Server extends EventEmitter {
   }
 
   close(cb) {
-    console.log('close!')
     if (this.destroyed) {
       cb(new Error('Server is closed.'))
     }
@@ -60,6 +60,39 @@ class Server extends EventEmitter {
   }
 }
 
+class Socket extends shh.Connection {
+  constructor(opts) {
+    super(opts)
+  }
+
+  connect(port, host, cb) {
+    let opts
+    if (typeof port === 'object') {
+      opts = port
+      port = opts.port
+      host = opts.host
+    }
+
+    if (typeof host === 'function') {
+      cb = host
+    }
+
+    if (host && port) {
+      this.websocket = new WebSocket(`${host}:${port}`)
+      this.createConnection = () => this.websocket
+    }
+    process.nextTick(() => super.connect(cb))
+    return this
+  }
+}
+
+function connect(port, host, opts, cb) {
+  return new Socket(opts).connect(port, host, cb)
+}
+
 module.exports = {
-  createServer
+  createServer,
+  connect,
+  Server,
+  Socket
 }

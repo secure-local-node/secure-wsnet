@@ -16,7 +16,7 @@ server.setMaxListeners(0)
 
 server.on('connection', bob => {
   console.log('on connection')
-
+  
   bob.on('error', console.error)
   bob.on('handshake', () => {
     console.log('bob handshake')

@@ -1,5 +1,5 @@
 {
-  "name": "secure-localnet",
+  "name": "secure-wsnet",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/secure-local-node/secure-localnet.git"
+    "url": "git+https://github.com/secure-local-node/secure-wsnet.git"
   },
   "keywords": [
     "secure",
@@ -18,11 +18,11 @@
   "author": "Eric Jiang <ejiang9@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/secure-local-node/secure-localnet/issues"
+    "url": "https://github.com/secure-local-node/secure-wsnet/issues"
   },
-  "homepage": "https://github.com/secure-local-node/secure-localnet#readme",
+  "homepage": "https://github.com/secure-local-node/secure-wsnet#readme",
   "dependencies": {
-    "secret-handshake-over-hypercore": "^0.1.0",
+    "secret-handshake-over-hypercore": "^0.1.1",
     "simple-websocket": "^7.2.0"
   },
   "devDependencies": {
