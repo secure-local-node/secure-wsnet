@@ -1,1 +1,1 @@
-# secure-localnet
+# secure-wsnet
