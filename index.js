@@ -1,4 +1,4 @@
-const shh = require('secret-handshake-over-hypercore')
+const { Connection } = require('secret-handshake-over-hypercore')
 const _Server = require('simple-websocket/server')
 const WebSocket = require('simple-websocket')
 const { EventEmitter } = require('events')
@@ -25,12 +25,13 @@ class Server extends EventEmitter {
 
     this.sharedKey = opts.sharedKey
     this.capabilities = opts.capabilities || []
+
+    this.onConnection = this._onConnection.bind(this)
+    this.onListening = this._onListening.bind(this)
   }
 
   listen(port, opts, cb) {
     this._server = new _Server(Object.assign({ port }, opts))
-    this.onConnection = this._onConnection.bind(this)
-    this.onListening = this._onListening.bind(this)
     this._server.on('connection', this.onConnection)
     this._server.on('listening', this.onListening)
     return this
@@ -60,7 +61,7 @@ class Server extends EventEmitter {
   }
 }
 
-class Socket extends shh.Connection {
+class Socket extends Connection {
   constructor(opts) {
     super(opts)
   }
