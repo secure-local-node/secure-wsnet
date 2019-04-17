@@ -133,7 +133,7 @@ class Server extends EventEmitter {
       }
     }
 
-    Object.assign({}, this.opts)
+    Object.assign(opts, this.opts)
 
     if (undefined !== host) {
       opts.host = host
