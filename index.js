@@ -202,7 +202,8 @@ class Server extends EventEmitter {
     this.webSocketServer.removeListener('error', this.onerror)
     this.webSocketServer.close(cb)
     this.webSocketServer = null
-
+    this.emit('close')
+    
     return this
   }
 
