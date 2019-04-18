@@ -23,7 +23,7 @@
   "homepage": "https://github.com/secure-local-node/secure-wsnet#readme",
   "dependencies": {
     "ip": "^1.1.5",
-    "secret-handshake-over-hypercore": "^0.1.3",
+    "secret-handshake-over-hypercore": "^0.1.4",
     "simple-websocket": "^7.2.0"
   },
   "devDependencies": {
