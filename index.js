@@ -196,32 +196,30 @@ class Server extends EventEmitter {
     }
 
     this.destroyed = true
-    this.webSocketServer.removeListener('connection', this.onconnection)
-    this.webSocketServer.removeListener('listening', this.onlistening)
-    this.webSocketServer.removeListener('close', this.onclose)
-    this.webSocketServer.removeListener('error', this.onerror)
-    this.webSocketServer.close(cb)
-    this.webSocketServer = null
-    this.emit('close')
-    
+    if (this.webSocketServer) {
+      this.webSocketServer.removeListener('connection', this.onconnection)
+      this.webSocketServer.removeListener('listening', this.onlistening)
+      this.webSocketServer.removeListener('close', this.onclose)
+      this.webSocketServer.removeListener('error', this.onerror)
+      this.webSocketServer.close(cb)
+      this.webSocketServer = null
+      this.emit('close')
+    }
+
     return this
   }
 
   onconnection(stream) {
     const { sharedKey, capabilities } = this
     const socket = new Socket({
+      capabilities,
       sharedKey,
       stream,
-      capabilities: capabilities.map((c) => {
-        return Buffer.isBuffer(c) ? c : capability(c)
-      })
     })
 
     socket.connect()
     socket.on('error', this.onerror)
-    socket.on('close', () => {
-      this.close()
-    })
+
     this.emit('connection', socket)
   }
 
@@ -230,7 +228,7 @@ class Server extends EventEmitter {
   }
 
   onclose() {
-    this.emit('close')
+    this.close()
   }
 
   onerror(err) {
@@ -240,6 +238,13 @@ class Server extends EventEmitter {
 
 class Socket extends Connection {
   constructor(opts) {
+    opts = Object.assign({}, opts)
+    if (opts && Array.isArray(opts.capabilities)) {
+      opts.capabilities = opts.capabilities.map((c) => {
+        return Buffer.isBuffer(c) ? c : capability(c)
+      })
+    }
+
     super(opts)
   }
 
