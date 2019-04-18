@@ -218,6 +218,10 @@ class Server extends EventEmitter {
     })
 
     socket.connect()
+    socket.on('error', this.onerror)
+    socket.on('close', () => {
+      this.close()
+    })
     this.emit('connection', socket)
   }
 
