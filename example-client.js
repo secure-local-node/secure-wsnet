@@ -12,8 +12,8 @@ const alice = net.connect({
     shh.capability('auth'),
     shh.capability('read'),
   ]
-}, _ => {
-  console.log('callback')
+}, err => {
+  console.log('callback', err)
 })
 
 alice.on('handshake', () => {
