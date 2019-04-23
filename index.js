@@ -22,14 +22,14 @@ function connect(port, host, opts, cb) {
     host = undefined
   }
 
-  if (host && 'object' === typeof host) {
-    opts = host
-    host = undefined
-  }
-
   if ('function' === typeof opts) {
     cb = opts
     opts = {}
+  }
+
+  if (host && 'object' === typeof host) {
+    opts = host
+    host = undefined
   }
 
   if (port && 'object' === typeof port) {
