@@ -340,10 +340,17 @@ class Socket extends Connection {
     process.nextTick(() => super.connect(cb))
 
     this.once('connect', () => {
+      if (this.webSocket) {
+        this.webSocket.removeListener('error', cb)
+      }
       this.remoteAddress = host
       this.remoteFamily = ip.isV6Format(host) ? 'IPv6' : 'IPv4'
       this.remotePort = port
     })
+
+    if (this.webSocket) {
+      this.webSocket.once('error', cb)
+    }
 
     return this
   }

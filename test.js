@@ -46,6 +46,7 @@ test('createServer client insufficient capabilities', (t) => {
 
   server.on('error', error => {
     t.ok(error instanceof Error, 'server failed')
+    server.close()
   })
 
   server.on('close', () => {
