@@ -341,7 +341,9 @@ class Socket extends Connection {
 
     this.once('connect', () => {
       if (this.webSocket) {
-        this.webSocket.removeListener('error', cb)
+        if ('function' === typeof cb) {
+          this.webSocket.removeListener('error', cb)
+        }
       }
       this.remoteAddress = host
       this.remoteFamily = ip.isV6Format(host) ? 'IPv6' : 'IPv4'
@@ -349,7 +351,9 @@ class Socket extends Connection {
     })
 
     if (this.webSocket) {
-      this.webSocket.once('error', cb)
+      if ('function' === typeof cb) {
+        this.webSocket.once('error', cb)
+      }
     }
 
     return this
